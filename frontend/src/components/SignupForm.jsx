@@ -1,63 +1,93 @@
 import React, { useState } from "react";
-import { login } from "../api/authApi";
+import { signup } from "../api/authApi";
 import { useNavigate, Link } from "react-router-dom";
 
-function LoginForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function SignupForm() {
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setError("");
+    setSuccessMsg("");
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!username || !password) {
-      setError("아이디와 비밀번호를 모두 입력하세요.");
+    setSuccessMsg("");
+
+    if (!form.username || !form.email || !form.password) {
+      setError("모든 필드를 입력해주세요.");
       return;
     }
+
+    // 간단 이메일 형식 체크 (정규식)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError("올바른 이메일 주소를 입력하세요.");
+      return;
+    }
+
     try {
-      const message = await login({ username, password });
-      if (message === "로그인 성공") {
-        navigate("/");
-      } else {
-        setError("로그인 실패: 다시 시도해주세요.");
-      }
+      await signup(form);
+      setSuccessMsg("회원가입 성공! 로그인 페이지로 이동합니다.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
-      setError(err.message || "로그인 중 오류가 발생했습니다.");
+      setError(err.message || "회원가입 중 오류가 발생했습니다.");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
-      <h2 style={styles.title}>로그인</h2>
+      <h2 style={styles.title}>회원가입</h2>
 
       <input
-        type="text"
+        name="username"
+        value={form.username}
+        onChange={handleChange}
         placeholder="아이디"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
         style={styles.input}
         autoComplete="username"
       />
       <input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        placeholder="이메일"
         style={styles.input}
-        autoComplete="current-password"
+        autoComplete="email"
+        type="email"
+      />
+      <input
+        name="password"
+        type="password"
+        value={form.password}
+        onChange={handleChange}
+        placeholder="비밀번호"
+        style={styles.input}
+        autoComplete="new-password"
       />
 
       {error && <div style={styles.error}>{error}</div>}
+      {successMsg && <div style={styles.success}>{successMsg}</div>}
 
       <button type="submit" style={styles.button}>
-        로그인
+        회원가입
       </button>
 
       <p style={styles.text}>
-        계정이 없나요?{" "}
-        <Link to="/signup" style={styles.link}>
-          회원가입
+        이미 계정이 있나요?{" "}
+        <Link to="/login" style={styles.link}>
+          로그인
         </Link>
       </p>
     </form>
@@ -109,6 +139,13 @@ const styles = {
     fontSize: "0.9rem",
     textAlign: "center",
   },
+  success: {
+    color: "#2e7d32",
+    marginBottom: "1rem",
+    fontWeight: "600",
+    fontSize: "0.9rem",
+    textAlign: "center",
+  },
   text: {
     marginTop: "1rem",
     fontSize: "0.9rem",
@@ -122,4 +159,4 @@ const styles = {
   },
 };
 
-export default LoginForm;
+export default SignupForm;
