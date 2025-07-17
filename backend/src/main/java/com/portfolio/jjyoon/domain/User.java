@@ -1,8 +1,7 @@
 package com.portfolio.jjyoon.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +16,17 @@ import lombok.Setter;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 자동 증가 설정
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
+
+    @JsonIgnore
+    @Column(name = "password_hash", nullable = false)
     private String password;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 }
