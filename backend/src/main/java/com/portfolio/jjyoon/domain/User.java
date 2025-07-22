@@ -16,7 +16,7 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 자동 증가 설정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -25,7 +25,7 @@ public class User {
 
     @JsonIgnore
     @Column(name = "password_hash", nullable = false)
-    private String password;
+    private String passwordHash;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;

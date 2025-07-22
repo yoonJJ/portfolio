@@ -1,18 +1,44 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../api/authApi"; // 로그아웃 함수 (직접 구현한 거)
 
 function MainPage() {
+  const username = localStorage.getItem("username"); // 로그인 시 저장한 사용자명
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // 백엔드에 로그아웃 요청
+      localStorage.removeItem("username"); // 로컬스토리지에서 사용자명 삭제
+      navigate("/login"); // 로그인 페이지로 이동
+    } catch (err) {
+      alert("로그아웃 실패: " + err.message);
+    }
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.card} className="fade-in-up">
-        <h1 style={styles.title}>환영합니다!</h1>
-        <p style={styles.text}>React + Spring Boot 연동 프로젝트에 오신 것을 환영합니다.</p>
-        <p style={styles.text}>
-          <Link to="/login" style={styles.loginButton}>
-            로그인
-          </Link>{" "}
-          후 다양한 기능을 이용해보세요.
-        </p>
+        {username ? (
+          <>
+            <h1 style={styles.title}>{username}님, 환영합니다!</h1>
+            <p style={styles.text}>React + Spring Boot 연동 프로젝트에 오신 것을 환영합니다.</p>
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              로그아웃
+            </button>
+          </>
+        ) : (
+          <>
+            <h1 style={styles.title}>환영합니다!</h1>
+            <p style={styles.text}>React + Spring Boot 연동 프로젝트에 오신 것을 환영합니다.</p>
+            <p style={styles.text}>
+              <Link to="/login" style={styles.loginButton}>
+                로그인
+              </Link>{" "}
+              후 다양한 기능을 이용해보세요.
+            </p>
+          </>
+        )}
       </div>
 
       <style>{`
@@ -40,7 +66,7 @@ function MainPage() {
           p {
             font-size: 1rem !important;
           }
-          a {
+          a, button {
             padding: 8px 20px !important;
             font-size: 0.9rem !important;
           }
@@ -87,6 +113,20 @@ const styles = {
     textDecoration: "none",
     fontWeight: "600",
     boxShadow: "0 4px 12px rgba(102,126,234,0.4)",
+    transition: "background-color 0.3s ease",
+    border: "none",
+    cursor: "pointer",
+  },
+  logoutButton: {
+    padding: "10px 25px",
+    backgroundColor: "#e53e3e",
+    color: "white",
+    border: "none",
+    borderRadius: "25px",
+    fontWeight: "600",
+    cursor: "pointer",
+    fontSize: "1rem",
+    boxShadow: "0 4px 12px rgba(229, 62, 62, 0.4)",
     transition: "background-color 0.3s ease",
   },
 };

@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "https://jjyoon.dev"}, allowCredentials = "true")
 public class AuthController {
 
     private final UserService userService;
@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     // 회원가입
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
             User newUser = userService.registerUser(
@@ -60,8 +60,7 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(authToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            HttpSession session = httpRequest.getSession(true); // 세션 생성
-            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+            HttpSession session = httpRequest.getSession(true);
 
             return ResponseEntity.ok(new UserLoginResponse("로그인 성공"));
         } catch (AuthenticationException e) {

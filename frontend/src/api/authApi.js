@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/auth";
+const API_URL = "https://jjyoon.dev/api/auth";
+
+console.log("Auth API URL:", API_URL);
 
 /* 로그인 요청 (세션 기반, 쿠키 포함) */
 export async function login(credentials) {
@@ -9,7 +11,7 @@ export async function login(credentials) {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
-    return response.data.message; // "로그인 성공" 기대
+    return response.data.message;
   } catch (error) {
     if (error.response?.data?.message) {
       throw new Error(error.response.data.message);
@@ -17,6 +19,7 @@ export async function login(credentials) {
     throw new Error("로그인 중 오류가 발생했습니다.");
   }
 }
+
 
 /* 로그아웃 요청 */
 export async function logout() {
@@ -31,7 +34,9 @@ export async function logout() {
 /* 회원가입 요청 */
 export async function signup(userData) {
   try {
-    const response = await axios.post(`${API_URL}/signup`, userData);
+    const response = await axios.post(`${API_URL}/signup`, userData, {
+      withCredentials: true,
+    });
     return response.data.message;
   } catch (error) {
     if (error.response?.data?.message) {

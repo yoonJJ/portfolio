@@ -28,7 +28,7 @@ function SignupForm() {
       return;
     }
 
-    // 간단 이메일 형식 체크 (정규식)
+    // 간단 이메일 형식 체크
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       setError("올바른 이메일 주소를 입력하세요.");

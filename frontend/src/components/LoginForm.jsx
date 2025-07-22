@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { login } from "../api/authApi";
 import { useNavigate, Link } from "react-router-dom";
+import { login } from "../api/authApi";
+
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -9,23 +10,25 @@ function LoginForm() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    if (!username || !password) {
-      setError("아이디와 비밀번호를 모두 입력하세요.");
-      return;
+  e.preventDefault();
+  setError("");
+  if (!username || !password) {
+    setError("아이디와 비밀번호를 모두 입력하세요.");
+    return;
+  }
+
+  try {
+    const message = await login({ username, password }); // JSON 객체로 보냄
+    if (message === "로그인 성공") {
+      localStorage.setItem("username", username);
+      navigate("/");
+    } else {
+      setError("로그인 실패: 다시 시도해주세요.");
     }
-    try {
-      const message = await login({ username, password });
-      if (message === "로그인 성공") {
-        navigate("/");
-      } else {
-        setError("로그인 실패: 다시 시도해주세요.");
-      }
-    } catch (err) {
-      setError(err.message || "로그인 중 오류가 발생했습니다.");
-    }
-  };
+  } catch (err) {
+    setError(err.message || "로그인 중 오류가 발생했습니다.");
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
@@ -37,7 +40,6 @@ function LoginForm() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         style={styles.input}
-        autoComplete="username"
       />
       <input
         type="password"
@@ -45,20 +47,15 @@ function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         style={styles.input}
-        autoComplete="current-password"
       />
 
       {error && <div style={styles.error}>{error}</div>}
 
-      <button type="submit" style={styles.button}>
-        로그인
-      </button>
+      <button type="submit" style={styles.button}>로그인</button>
 
       <p style={styles.text}>
         계정이 없나요?{" "}
-        <Link to="/signup" style={styles.link}>
-          회원가입
-        </Link>
+        <Link to="/signup" style={styles.link}>회원가입</Link>
       </p>
     </form>
   );
@@ -77,11 +74,7 @@ const styles = {
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
-  title: {
-    textAlign: "center",
-    marginBottom: "1.5rem",
-    color: "#333",
-  },
+  title: { textAlign: "center", marginBottom: "1.5rem", color: "#333" },
   input: {
     marginBottom: "1rem",
     padding: "0.6rem",
@@ -89,7 +82,6 @@ const styles = {
     borderRadius: "4px",
     border: "1px solid #bbb",
     outline: "none",
-    transition: "border-color 0.3s",
   },
   button: {
     padding: "0.7rem",
@@ -100,7 +92,6 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
     fontSize: "1rem",
-    marginTop: "0.5rem",
   },
   error: {
     color: "#d93025",

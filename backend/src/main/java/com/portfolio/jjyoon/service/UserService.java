@@ -18,7 +18,7 @@ public class UserService {
 
     public boolean authenticate(String username, String rawPassword) {
         User user = userRepository.findByUsername(username);
-        return user != null && passwordEncoder.matches(rawPassword, user.getPassword());
+        return user != null && passwordEncoder.matches(rawPassword, user.getPasswordHash());
     }
 
     public User registerUser(String username, String rawPassword, String email) {
