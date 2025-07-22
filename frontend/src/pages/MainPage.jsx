@@ -1,16 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../api/authApi"; // 로그아웃 함수 (직접 구현한 거)
+import { logout } from "../api/authApi";
 
 function MainPage() {
-  const username = localStorage.getItem("username"); // 로그인 시 저장한 사용자명
+  const userName = localStorage.getItem("userName"); // ✅ 이름으로 변경
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await logout(); // 백엔드에 로그아웃 요청
-      localStorage.removeItem("username"); // 로컬스토리지에서 사용자명 삭제
-      navigate("/login"); // 로그인 페이지로 이동
+      await logout();
+      localStorage.removeItem("userName"); // ✅ 이름 항목 제거
+      navigate("/login");
     } catch (err) {
       alert("로그아웃 실패: " + err.message);
     }
@@ -19,9 +19,9 @@ function MainPage() {
   return (
     <div style={styles.page}>
       <div style={styles.card} className="fade-in-up">
-        {username ? (
+        {userName ? (
           <>
-            <h1 style={styles.title}>{username}님, 환영합니다!</h1>
+            <h1 style={styles.title}>{userName}님, 환영합니다!</h1>
             <p style={styles.text}>React + Spring Boot 연동 프로젝트에 오신 것을 환영합니다.</p>
             <button onClick={handleLogout} style={styles.logoutButton}>
               로그아웃

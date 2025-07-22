@@ -11,7 +11,8 @@ export async function login(credentials) {
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
     });
-    return response.data.message;
+    // ✅ 전체 응답 객체 리턴: { message, userName }
+    return response.data;
   } catch (error) {
     if (error.response?.data?.message) {
       throw new Error(error.response.data.message);
@@ -20,11 +21,12 @@ export async function login(credentials) {
   }
 }
 
-
 /* 로그아웃 요청 */
 export async function logout() {
   try {
-    const response = await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+    const response = await axios.post(`${API_URL}/logout`, {}, {
+      withCredentials: true,
+    });
     return response.data.message;
   } catch {
     throw new Error("로그아웃 중 오류가 발생했습니다.");

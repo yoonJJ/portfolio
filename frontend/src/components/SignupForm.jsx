@@ -3,44 +3,29 @@ import { signup } from "../api/authApi";
 import { useNavigate, Link } from "react-router-dom";
 
 function SignupForm() {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");  // 이름 상태 추가
   const [error, setError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setError("");
-    setSuccessMsg("");
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccessMsg("");
 
-    if (!form.username || !form.email || !form.password) {
-      setError("모든 필드를 입력해주세요.");
-      return;
-    }
-
-    // 간단 이메일 형식 체크
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      setError("올바른 이메일 주소를 입력하세요.");
+    if (!userId || !password || !email || !userName) {
+      setError("모든 필드를 입력하세요.");
       return;
     }
 
     try {
-      await signup(form);
-      setSuccessMsg("회원가입 성공! 로그인 페이지로 이동합니다.");
-      setTimeout(() => {
+      const message = await signup({ userId, password, email, userName });
+      if (message === "회원가입 성공") {
         navigate("/login");
-      }, 1500);
+      } else {
+        setError("회원가입 실패: 다시 시도해주세요.");
+      }
     } catch (err) {
       setError(err.message || "회원가입 중 오류가 발생했습니다.");
     }
@@ -51,44 +36,41 @@ function SignupForm() {
       <h2 style={styles.title}>회원가입</h2>
 
       <input
-        name="username"
-        value={form.username}
-        onChange={handleChange}
+        type="text"
         placeholder="아이디"
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
         style={styles.input}
-        autoComplete="username"
       />
       <input
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        placeholder="이메일"
-        style={styles.input}
-        autoComplete="email"
-        type="email"
-      />
-      <input
-        name="password"
         type="password"
-        value={form.password}
-        onChange={handleChange}
         placeholder="비밀번호"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         style={styles.input}
-        autoComplete="new-password"
+      />
+      <input
+        type="email"
+        placeholder="이메일"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        style={styles.input}
+      />
+      <input
+        type="text"
+        placeholder="이름"
+        value={userName}
+        onChange={(e) => setUserName(e.target.value)}
+        style={styles.input}
       />
 
       {error && <div style={styles.error}>{error}</div>}
-      {successMsg && <div style={styles.success}>{successMsg}</div>}
 
-      <button type="submit" style={styles.button}>
-        회원가입
-      </button>
+      <button type="submit" style={styles.button}>회원가입</button>
 
       <p style={styles.text}>
         이미 계정이 있나요?{" "}
-        <Link to="/login" style={styles.link}>
-          로그인
-        </Link>
+        <Link to="/login" style={styles.link}>로그인</Link>
       </p>
     </form>
   );
@@ -107,11 +89,7 @@ const styles = {
     boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   },
-  title: {
-    textAlign: "center",
-    marginBottom: "1.5rem",
-    color: "#333",
-  },
+  title: { textAlign: "center", marginBottom: "1.5rem", color: "#333" },
   input: {
     marginBottom: "1rem",
     padding: "0.6rem",
@@ -119,7 +97,6 @@ const styles = {
     borderRadius: "4px",
     border: "1px solid #bbb",
     outline: "none",
-    transition: "border-color 0.3s",
   },
   button: {
     padding: "0.7rem",
@@ -130,17 +107,9 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
     fontSize: "1rem",
-    marginTop: "0.5rem",
   },
   error: {
     color: "#d93025",
-    marginBottom: "1rem",
-    fontWeight: "600",
-    fontSize: "0.9rem",
-    textAlign: "center",
-  },
-  success: {
-    color: "#2e7d32",
     marginBottom: "1rem",
     fontWeight: "600",
     fontSize: "0.9rem",

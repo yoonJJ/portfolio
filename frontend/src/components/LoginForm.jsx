@@ -2,33 +2,34 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../api/authApi";
 
-
 function LoginForm() {
-  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  if (!username || !password) {
-    setError("아이디와 비밀번호를 모두 입력하세요.");
-    return;
-  }
+    e.preventDefault();
+    setError("");
 
-  try {
-    const message = await login({ username, password }); // JSON 객체로 보냄
-    if (message === "로그인 성공") {
-      localStorage.setItem("username", username);
-      navigate("/");
-    } else {
-      setError("로그인 실패: 다시 시도해주세요.");
+    if (!userId || !password) {
+      setError("아이디와 비밀번호를 모두 입력하세요.");
+      return;
     }
-  } catch (err) {
-    setError(err.message || "로그인 중 오류가 발생했습니다.");
-  }
-};
+
+    try {
+      const { message, userName } = await login({ userId, password }); // userName도 받음
+      if (message === "로그인 성공") {
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("userName", userName); // 이름 저장
+        navigate("/");
+      } else {
+        setError("로그인 실패: 다시 시도해주세요.");
+      }
+    } catch (err) {
+      setError(err.message || "로그인 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
@@ -37,8 +38,8 @@ function LoginForm() {
       <input
         type="text"
         placeholder="아이디"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)}
         style={styles.input}
       />
       <input
