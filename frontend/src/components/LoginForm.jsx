@@ -18,10 +18,10 @@ function LoginForm() {
     }
 
     try {
-      const { message, userName } = await login({ userId, password }); // userName도 받음
+      const { message, userName } = await login({ userId, password });
       if (message === "로그인 성공") {
         localStorage.setItem("userId", userId);
-        localStorage.setItem("userName", userName); // 이름 저장
+        localStorage.setItem("userName", userName);
         navigate("/");
       } else {
         setError("로그인 실패: 다시 시도해주세요.");

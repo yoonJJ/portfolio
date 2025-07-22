@@ -1,14 +1,14 @@
 # Gradle 빌드 결과물 무시
 /backend/build/
 
-# IntelliJ IDEA 설정 무시 (IDE 쓴다면)
+# IntelliJ IDEA 설정 무시
 .idea/
 /*.iml
 
-# MacOS 관련 파일 무시 (맥 유저라면)
+# MacOS 관련 파일 무시
 .DS_Store
 
-# 기타 자바 관련 무시 예시
+# 기타 자바 관련 무시
 *.class
 *.jar
 *.war

@@ -16,7 +16,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // 회원가입
     public String signup(SignupRequest signupRequest) {
         if (userRepository.existsByUserId(signupRequest.getUserId())) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
@@ -35,7 +34,6 @@ public class UserService {
         return "회원가입 성공";
     }
 
-    // 로그인 인증 → 사용자 정보 반환
     public User authenticate(String userId, String password) {
         Optional<User> userOpt = userRepository.findByUserId(userId);
         if (userOpt.isEmpty()) {

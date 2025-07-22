@@ -2,20 +2,48 @@ package com.portfolio.jjyoon.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
 
-@Getter
 public class SignupRequest {
 
-    @NotBlank(message = "아이디를 입력해주세요.")
+    @NotBlank
     private String userId;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank
     private String password;
 
-    @NotBlank(message = "이메일을 입력해주세요.")
-    @Email(message = "올바른 이메일 주소를 입력해주세요.")
+    @NotBlank
+    private String userName;
+
+    @NotBlank
+    @Email
     private String email;
 
-    private String userName; // 선택 필드
+    // getters and setters
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
