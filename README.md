@@ -2,6 +2,7 @@
 
 React + Spring Boot 기반의 사용자 인증 시스템을 구축한 포트폴리오 프로젝트입니다.  
 로그인/회원가입/로그아웃, 세션 기반 인증 유지, 프론트와의 통신, 배포까지 모두 직접 구현하였습니다.
+앞으로 기능 확장 예정입니다.
 
 ---
 
@@ -35,7 +36,7 @@ React + Spring Boot 기반의 사용자 인증 시스템을 구축한 포트폴�
 | 보안         | Spring Security, BCrypt       |
 | 데이터베이스  | PostgreSQL (운영), H2 (개발)   |
 | ORM           | Spring Data JPA               |
-| 프론트엔드    | React + Vite (별도 관리)       |
+| 프론트엔드    | React                       |
 | IDE           | IntelliJ IDEA / VS Code       |
 | 서버          | GCP VM (Nginx + HTTPS 배포)    |
 
